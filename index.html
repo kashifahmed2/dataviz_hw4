@@ -5,25 +5,24 @@
     <meta charset="utf-8">
     <style>
         .chart-container {
-            max-width: 1050px;
-            border: 3px solid red;
+            max-width: 500px;
             margin: 0 auto;
             /* auto centers the div */
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
 
+        .source {
+            margin: 2em auto;
+            color: #999;
+        }
+
         svg {
-            border: 2px solid purple;
             overflow: visible;
         }
 
 
-        h1 {
-            border: 2px solid green;
-        }
-
         .filler {
-            height: 20rem;
+            height: 10rem;
             text-align: center;
         }
 
@@ -48,7 +47,6 @@
             font-size: 24px;
             max-width: 60rem;
             margin: 3rem auto;
-            background-color: #f4f4f4;
             padding: 1rem;
             position: relative;
 
@@ -62,7 +60,7 @@
         }
 
         #scrolly-overlay .scrolly article .step {
-            min-height: 67vh;
+            min-height: 1px;
             margin-bottom: 1rem;
         }
 
@@ -79,7 +77,6 @@
             padding: 1rem;
             text-align: center;
             font-weight: 400;
-            background-color: #5b5b5b;
             transition: background-color 250ms ease-in-out;
             color: #f4f4f4;
         }
@@ -89,13 +86,8 @@
             position: sticky;
             width: 100%;
             height: 50vh;
-            /* vh is the unit that divdes the viewport in units of 1/100 */
-            /* height is 50 vh = half the height of the viewport */
-            background: #969696;
             margin: 0;
             top: 25vh;
-            /* this is how high it should be from top */
-
             left: 0;
         }
 
@@ -119,18 +111,31 @@
         .spacer {
             height: 1500px;
         }
+
     </style>
+      <title>Data Visualization Kashif Ahmed</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="styles.css" rel="stylesheet"></style>
 </head>
+
+
+
+    <body>
+      <h1>
+        Kashif Ahmed
+      </h1>
+
+      <div id="intro">
+        <h2>
+          Homework 4, Question 1
+       </h2>
+      </div>
 
 <body>
     <section class='filler'>
 
-        <p>
-            At the Times we have our very complicated scrollytelling rig. This is a much cleaner, slimmed-down version <a
-                href="https://pudding.cool/process/scrollytelling-sticky/">by Elaina Natario and Russell Goldenberg at
-                the Pudding</a>.
-        </p>
-        <h2>Start Scrolling!</h2>
+        <h2>Changes in health insurance coverage in the US</h2>
 
     </section>
 
@@ -141,78 +146,148 @@
             <!--  sticky graphic   -->
             <figure class='sticky'>
                 <!-- put your chart stuff here -->
-                <div class='bar-outer'>
-                    <div class='bar-inner'></div>
-                </div>
+                <div class="chart-container">
+                    <h2 class="headline">
+                        Health insurance coverage in 2009
+                    </h2>
+            
+                    <svg width="1050px" height="575px">
+                    </svg>
+                <p class="source">Source: Current Population Survey, analysis by Matt Bruenig</p>
+
             </figure>
 
-            <!--  step text   -->
-            <article>
-                <div class='step' data-width='10%' data-index='0'>
-                    <p>Bar is 10%</p>
-                </div>
-                <div class='step' data-width='90%' data-index='1'>
-                    <p>Bar is 90%</p>
-                </div>
-                <div class='step' data-width='50%' data-index='2'>
-                    <p>Bar is 50%</p>
-                </div>
-            </article>
+
 
         </div>
 
     </section>
 
-    <section class='filler'>
-        <h2>End. Keep scrolling!</h2>
- 
-        <div class="spacer"></div>
-        <p>See? The article continued as normal.</p>
-        <p>
-            So basically the "sticky" positioned element is the figure. Article is relatively position element. When you scroll the through the article element, then the figure "element" unsticks.
-        </p>
-        <p>
-            This is all handled by CSS. The only Javascript is in checking which of the slides are in the viewport and then triggering a function when it is in view.
-        </p>
-        </br>
-        </br>
-    </section>
 </body>
 
 <!-- add your script blocks at the end -->
 <script src="https://d3js.org/d3.v6.min.js"></script>
+
 <script src="https://unpkg.com/enter-view@1.0.0/enter-view.min.js"></script>
 <!-- https://github.com/russellgoldenberg/enter-view -->
 
 
 <script>
-    const container = d3.select('#scrolly-overlay');
-    const stepSel = container.selectAll('.step'); //final all the step nodes
+    
+</script>
 
-    function updateChart(index) {
-        const sel = container.select(`[data-index='${index}']`);
-        const width = sel.attr('data-width');
-        stepSel.classed('is-active', (d, i) => i === index);
-        container.select('.bar-inner').style('width', width);
-    }
 
-    function init() {
+<script>
+    console.log(d3)
+    let width = 800;
+    let height = 500;
+    let margin = { top: 30, right: 10, bottom: 10, left: 30 };
 
-        enterView({ //our main view function
-            selector: stepSel.nodes(),
-            offset: 0.5, //when the slide is 50% away then trigger your chart
-            enter: el => { //what's supposed to happen when the slide enters?
-                const index = +d3.select(el).attr('data-index'); //extract the data-index attribute. this can be anything: a filter, a date, whatever.
-                updateChart(index);
-            },
-            exit: el => { //what's supposed to happen when the slide exits?
-                let index = +d3.select(el).attr('data-index');
-                index = Math.max(0, index - 1);
-                updateChart(index);
-            }
-        });
+    d3.csv("healthcare-disposable-inc.csv").then(function (data) {
+        let svg = d3.select("svg")
+        let scroll_steps = d3.select("article")
 
-    }
+        
+        let d2009 = data.filter(d => d.year==2009) 
 
-    init();
+        console.log({d2009})
+
+        let series2009 = d3.stack().keys(sel_cols)(d2009);
+
+        console.log({series2009})
+
+
+        let sel_cols = [
+            "Medicaid",
+            "Medicare",
+            "Medicare+Medicaid",
+            "Employer",
+            "Uninsured",
+            "Direct Purchase",
+            "Subsidized Exchange",
+            "CHIP",
+            "Military",
+            "Other"]
+        let sel_colors = [
+            "#f44336", // "Medicaid",
+            "#FF9800", // "Medicare",
+            "#FDD835", // "Medicare+Medicaid",
+            "#FFF8E1", // "Employer",
+            "#26A69A", // "Uninsured",
+            "#4DD0E1", // "Direct Purchase",
+            "#F06292", // "Subsidized Exchange",
+            "#5C6BC0", // "CHIP",
+            "#90A4AE", // "Military",
+            "#E0E0E0"  // "Other"
+        ]
+
+        let d2009 = data.filter(d => d.year==2009) 
+
+        console.log({d2009})
+
+        let series2020 = d3.stack().keys(sel_cols)(d2009);
+
+        console.log({series2009})
+
+        let color = d3.scaleOrdinal()
+            .domain(sel_colors)
+            .range(sel_colors)
+
+        let x = d3.scaleLinear()
+            .domain([0, 100])
+            .range([margin.left, width])
+
+        let y = d3.scaleLinear()
+            .domain([0,1])
+            .range([height - margin.bottom, margin.top])
+
+        let area = d3.area()
+        .x(d => x(d.data.Percentile))
+        .y0(d => y(d[0]))
+        .y1(d => y(d[1]))
+
+        let xAxisSettings = d3.axisBottom(x)
+            .tickSize(6)
+            .tickPadding(6)
+            .ticks(10)
+            .tickFormat(d3.format[".0f"])
+
+        let xAxis = svg.append("g")
+            .attr("class", "x axis")
+            .call(xAxisSettings)
+            .call(g => g.selectAll(".domain").remove())
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+
+        let yAxisSettings = d3.axisLeft(y)
+            .tickValues([.2, .4, .6,.8])
+            .tickSize(6)
+            .tickPadding(4)
+            .tickFormat(d3.format(".0%"))
+
+        let yAxis = svg
+            .append("g")
+            .attrr("class", "y axis")
+            .call(yAxisSettings)
+            .call(g => g.selectAll(".domain").remove())
+
+        svg.append("g")
+            .selectAll("path")
+            .data(series2020)
+            .join("path")
+            .attr("class", d=> { 
+                console.log(d)
+                return d.key
+            })
+            .attr("fill", d => color(d.key))
+            .attr("d", area)
+            .append("title")
+
+        const container = d3.select('#scrolly-overlay');
+        
+        const stepSel = container.selectAll('.step');
+
+
+    })
+    
+
 </script>
